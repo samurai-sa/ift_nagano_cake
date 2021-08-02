@@ -4,6 +4,7 @@ class Public::OrdersController < ApplicationController
   # 注文情報入力画面(支払方法・配送先の選択)
   def new
     @order = Order.new
+    @address = Address.new
     @addresses = current_end_user.addresses
   end
   
@@ -12,7 +13,6 @@ class Public::OrdersController < ApplicationController
     @order = current_end_user.orders.new
     @order.payment_method = params[:order][:payment_method]
     @order.shipping_cost = 800
-    # @cart_items = CartItem.all
     @cart_items = current_end_user.cart_items
     if params[:order][:address_option] == "0"
       @order.postal_code = current_end_user.postal_code
@@ -27,6 +27,12 @@ class Public::OrdersController < ApplicationController
       @order.postal_code = params[:order][:postal_code]
       @order.address = params[:order][:address]
       @order.name = params[:order][:name]
+      binding.pry
+      @address = current_end_user.addresses.new(address_params)
+      @address.postal_code = params[:order][:postal_code]
+      @address.address = params[:order][:address]
+      @address.name = params[:order][:name]
+      @address.save!
     end
   end
   
@@ -69,6 +75,10 @@ class Public::OrdersController < ApplicationController
   
   def order_params
     params.require(:order).permit(:end_user_id, :postal_code, :address, :name, :shipping_cost, :total_payment, :payment_method, :status)
+  end
+  
+  def address_params
+    params.permit(:postal_code, :address, :name, :end_user_id)
   end
   
   def cart_item_check
