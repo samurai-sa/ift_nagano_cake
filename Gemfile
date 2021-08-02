@@ -73,3 +73,7 @@ gem 'jquery-rails'
 # 画像投稿
 gem "refile", require: "refile/rails", github: 'manfe/refile'
 gem "refile-mini_magick"
+
+# enum日本語化
+gem 'enum_help'
+gem 'rails-i18n'
